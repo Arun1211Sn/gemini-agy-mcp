@@ -173,6 +173,11 @@ async def _call(prompt: str, workspace: str | None, model: str | None, effort: s
     if paths:
         prompt += "\n\nRead these files before answering:\n" + "\n".join(f"- {p}" for p in paths)
     prompt += "\n\n" + TOOLING_NOTE
+    if json_schema:
+        # Without this, a schema field like "tools" gets filled with agy's own tool calls.
+        prompt += ("\n\nYour final answer must be JSON matching this schema. The schema describes "
+                   "the ANSWER to the question above (its subject matter), never your own tool "
+                   "calls or process:\n" + json_schema)
     model_id = _pick_model(model, effort)
 
     result = await _agy_once(prompt, cwd, model_id, conversation_id, json_schema, extra_dirs)
