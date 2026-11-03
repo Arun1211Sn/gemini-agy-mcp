@@ -8,8 +8,8 @@ Antigravity CLI (`agy`), for:
 - independent, unbiased reviews of code, diffs, plans and documents
 - design critiques: Gemini sketches its own approach first, then compares
 
-Gemini runs in agy's read-only `plan` mode: it can read files in the given workspace
-and search the web, but it cannot modify anything.
+Gemini runs in agy's read-only `plan` mode: it can read files (including images and PDFs)
+and search the web, but it cannot modify anything or run commands (so pass diffs inline).
 
 ## Tools
 
@@ -19,10 +19,17 @@ and search the web, but it cannot modify anything.
 | `review` | Independent review of code / diff / plan / doc |
 | `design_critique` | Unbiased second opinion on a design proposal |
 | `ask_gemini` | General question |
-| `follow_up` | Continue a previous Gemini conversation by `conversation_id` |
+| `analyze_media` | Gemini looks at screenshots, diagrams, photos and PDFs |
+| `structured_query` | Answer as JSON validated against a JSON Schema you supply |
+| `follow_up` | Continue a previous Gemini conversation by `conversation_id` (can add files/context) |
+| `agy_info` | List agy's models, agents, plugins or MCP servers |
 
-All tools accept `workspace` (directory Gemini runs in), `files` (paths to read),
+The Gemini tools accept `workspace` (directory Gemini runs in; defaults to the current
+project), `files` (paths to read; files outside the workspace are exposed with `--add-dir`),
 `model`, and `effort` (`low` / `medium` / `high`, which selects the Gemini variant).
+
+Prompts are sent to agy over stdin (stream-json), so large diffs are fine. If Gemini
+returns an empty answer, the server asks once more in the same conversation.
 
 ## Requirements
 
